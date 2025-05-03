@@ -130,6 +130,97 @@ function displayPets(petType = "all", shouldSort = false) {
   }
 
 
+  filteredPets.forEach((pet) => {
+    const card = document.createElement("div");
+    card.className = "box border border-slate-300 rounded-lg p-5";
+
+    card.innerHTML = `
+      <div class="w-60 h-40 mb-5 rounded-2xl overflow-hidden">
+        <img src="${pet.image}" alt="${pet.name}" class="w-full h-full object-cover">
+      </div>
+      <div>
+        <h1 class="font-bold">${pet.name}</h1>
+        <div class="flex gap-3 text-slate-500"><i class="fa-solid fa-box w-2 h-5 mt-1"></i><h1>${pet.breed}</h1></div>
+        <div class="flex gap-3 text-slate-500"><i class="fa-solid fa-calendar h-5 mt-1"></i><h1>${pet.year}</h1></div>
+        <div class="flex gap-3 text-slate-500"><i class="fa-solid fa-mercury h-5 mt-1"></i><h1>${pet.gender}</h1></div>
+        <div class="flex gap-3 text-slate-500"><i class="fa-solid fa-dollar-sign h-5 mt-1"></i><h1>Price : $${pet.price}</h1></div>
+      </div>
+      <div class="border border-s-neutral-600 mt-3"></div>
+      <div class="py-4 flex gap-2">
+        <div class="like-btn w-10 h-10 flex items-center justify-center border border-slate-300 rounded-lg cursor-pointer">
+          <i class="fa-regular fa-thumbs-up"></i>
+        </div>
+        <div class="w-20 h-10 flex items-center justify-center border border-slate-300 rounded-lg relative">
+          <button class="adopt-btn font-bold text-[rgba(14,122,129,1)]">Adopt</button>
+          <button class="adopted-btn font-bold text-[rgba(14,122,129,1)] hidden">Adopted</button>
+        </div>
+        <div class="w-20 h-10 flex items-center justify-center border border-slate-300 rounded-lg">
+          <button class="details-btn bg-blue-100 hover:bg-blue-200 text-blue-600 px-2 py-1 rounded text-sm">
+            Details
+          </button>
+        </div>
+      </div>
+    `;
+
+
+    const likeBtn = card.querySelector(".like-btn");
+    likeBtn.addEventListener("click", () => {
+      const petImg = document.createElement("img");
+      petImg.src = pet.image;
+      petImg.alt = pet.name;
+      petImg.className = "w-20 h-20 object-cover rounded";
+      likedSection.appendChild(petImg);
+    });
+
+    const detailsBtn = card.querySelector(".details-btn");
+    detailsBtn.addEventListener("click", () => {
+      showModal(pet);
+    });
+
+    const adoptBtn = card.querySelector(".adopt-btn");
+    const adoptedBtn = card.querySelector(".adopted-btn");
+    adoptBtn.addEventListener("click", () => {
+      let count = 3;
+      adoptBtn.disabled = true;
+      adoptBtn.textContent = `Adopting in ${count}...`;
+      const countdown = setInterval(() => {
+        count--;
+        if (count > 0) {
+          adoptBtn.textContent = `Adopting in ${count}...`;
+        } else {
+          clearInterval(countdown);
+          adoptBtn.classList.add("hidden");
+          adoptedBtn.classList.remove("hidden");
+          adoptBtn.disabled = false;
+        }
+      }, 1000);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+
+document.getElementById('sortByPriceBtn').addEventListener('click', () => {
+  displayPets(currentCategory, !isSorted);
+});
+
+
+document.querySelectorAll(".pet-btnss").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const type = this.getAttribute("data-type");
+    const spinner = document.getElementById("spinner");
+
+    
+    spinner.classList.remove("hidden");
+
+ 
+    setTimeout(() => {
+      displayPets(type);
+      spinner.classList.add("hidden");
+    }, 2000);
+  });
+});
 
 
 

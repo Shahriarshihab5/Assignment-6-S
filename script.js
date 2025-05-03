@@ -58,11 +58,9 @@ const pets = [
 let currentCategory = 'all'; 
 let isSorted = false; 
 
-
 const modal = document.getElementById("pet-modal");
 const modalImage = document.getElementById("modal-image");
 const modalName = document.getElementById("modal-name");
-
 
 function showModal(pet) {
   modalImage.src = pet.image;
@@ -74,7 +72,6 @@ function showModal(pet) {
   document.getElementById("modal-price").textContent = `$${pet.price}`;
   modal.classList.remove("hidden");
 }
-
 
 const closeModalBtn = document.getElementById("close-modal");
 const closeModalBtn2 = document.getElementById("close-modal-btn");
@@ -92,11 +89,9 @@ modal.addEventListener("click", (e) => {
   }
 });
 
-
 function sortPetsByPrice(petsArray) {
   return [...petsArray].sort((a, b) => b.price - a.price);
 }
-
 
 function displayPets(petType = "all", shouldSort = false) {
   const container = document.getElementById("pet-container");
@@ -104,15 +99,18 @@ function displayPets(petType = "all", shouldSort = false) {
   container.innerHTML = "";
 
   currentCategory = petType; 
+  isSorted = shouldSort; // Update the sort state before displaying
 
   let filteredPets = petType === "all" ? [...pets] : pets.filter((pet) => pet.type === petType);
 
-
   if (shouldSort) {
     filteredPets = sortPetsByPrice(filteredPets);
-    isSorted = true;
-  } else {
-    isSorted = false;
+  }
+
+
+  const sortBtn = document.getElementById('sortByPriceBtn');
+  if (sortBtn) {
+    sortBtn.textContent = isSorted ? 'Reset Sort' : 'Sort By Price';
   }
 
   if (filteredPets.length === 0) {
@@ -128,7 +126,6 @@ function displayPets(petType = "all", shouldSort = false) {
     `;
     return;
   }
-
 
   filteredPets.forEach((pet) => {
     const card = document.createElement("div");
@@ -161,7 +158,6 @@ function displayPets(petType = "all", shouldSort = false) {
         </div>
       </div>
     `;
-
 
     const likeBtn = card.querySelector(".like-btn");
     likeBtn.addEventListener("click", () => {
@@ -201,20 +197,21 @@ function displayPets(petType = "all", shouldSort = false) {
 }
 
 
+displayPets();
+
+
 document.getElementById('sortByPriceBtn').addEventListener('click', () => {
   displayPets(currentCategory, !isSorted);
 });
 
-
+// Category filter buttons
 document.querySelectorAll(".pet-btnss").forEach((btn) => {
   btn.addEventListener("click", function () {
     const type = this.getAttribute("data-type");
     const spinner = document.getElementById("spinner");
-
     
     spinner.classList.remove("hidden");
 
- 
     setTimeout(() => {
       displayPets(type);
       spinner.classList.add("hidden");
@@ -222,7 +219,30 @@ document.querySelectorAll(".pet-btnss").forEach((btn) => {
   });
 });
 
+// Mobile menu functionality
+document.addEventListener("DOMContentLoaded", function () {
+  const menuToggle = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
 
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+    
+    const icon = menuToggle.querySelector("i");
+    if (mobileMenu.classList.contains("active")) {
+      icon.classList.remove("fa-bars");
+      icon.classList.add("fa-times");
+    } else {
+      icon.classList.remove("fa-times");
+      icon.classList.add("fa-bars");
+    }
+  });
 
-displayPets();
-
+  document.addEventListener("click", (e) => {
+    if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove("active");
+      const icon = menuToggle.querySelector("i");
+      icon.classList.remove("fa-times");
+      icon.classList.add("fa-bars");
+    }
+  });
+});

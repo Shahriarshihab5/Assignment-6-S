@@ -25,8 +25,7 @@ A responsive web app for adopting pets to view available pets, filter by animal 
 - Font Awesome icons
 
 5. Live Demo
-https://assignment-06-shahriar.surge.sh/#scroller
-
+https://assignment-06-shahriar.surge.sh/
 6. How to Use
 1. Filter pets by category through the use of filter buttons
 2. Click "Sort By Price" to reverse price sorting
